@@ -5,8 +5,6 @@ import {
   ChartBar,
   ChartAxis,
   ChartGroup,
-  ChartLegend,
-  ChartTooltip,
   ChartThemeColor,
 } from '@patternfly/react-charts';
 import { noop } from '../../../../common/helpers';
@@ -46,12 +44,12 @@ const BarChart = ({
   const getChartDimensions = () => {
     switch (config) {
       case 'small':
-        return { height: 290, width: 400 };
+        return { height: 250, width: 400 };
       case 'medium':
-        return { height: 320, width: 450 };
+        return { height: 280, width: 450 };
       case 'regular':
       default:
-        return { height: 350, width: 350 };
+        return { height: 300, width: 350 };
     }
   };
 
@@ -67,7 +65,7 @@ const BarChart = ({
   };
 
   return (
-    <div style={{ height: dimensions.height, width: dimensions.width }}>
+    <div style={{ height: dimensions.height + 60, width: dimensions.width }}>
       <Chart
         ariaDesc={title?.text || 'Bar chart'}
         ariaTitle={title?.text || 'Bar chart'}
@@ -75,24 +73,29 @@ const BarChart = ({
         height={dimensions.height}
         width={dimensions.width}
         themeColor={ChartThemeColor.multi}
-        themeVariant="light"
         padding={{
           bottom: 60,
-          left: 60,
-          right: 30,
-          top: 30,
+          left: 70,
+          right: 20,
+          top: 10,
         }}
       >
-        <ChartAxis dependentAxis showGrid label={yAxisLabel} />
+        <ChartAxis
+          dependentAxis
+          showGrid
+          label={yAxisLabel}
+          tickFormat={t => String(Math.round(t))}
+        />
         <ChartAxis
           label={xAxisLabel}
-          tickFormat={t => (t.length > 10 ? `${t.substring(0, 10)}...` : t)}
+          tickFormat={t => {
+            const str = String(t);
+            return str.length > 10 ? `${str.substring(0, 10)}...` : str;
+          }}
         />
         <ChartGroup>
           <ChartBar data={chartData} onClick={handleBarClick} />
         </ChartGroup>
-        <ChartTooltip />
-        <ChartLegend />
       </Chart>
     </div>
   );
